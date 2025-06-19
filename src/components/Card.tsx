@@ -42,7 +42,6 @@ const Card: React.FC<CardProps> = ({
   const [isEditing, setIsEditing] = useState(startInEditMode);
   const [editContent, setEditContent] = useState(content);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [showColorPicker, setShowColorPicker] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -113,7 +112,6 @@ const Card: React.FC<CardProps> = ({
     e.stopPropagation(); // Prevent canvas double-click when double-clicking card
     setIsEditing(true);
     setEditContent(content);
-    setShowColorPicker(true); // Show color picker when entering edit mode
     onZIndexChange(id); // Bring to front when editing
     onEditModeChange?.(true);
   };
@@ -121,14 +119,12 @@ const Card: React.FC<CardProps> = ({
   const saveContent = () => {
     onContentChange(id, editContent);
     setIsEditing(false);
-    setShowColorPicker(false);
     onEditModeChange?.(false);
   };
 
   const cancelEdit = () => {
     setEditContent(content); // Reset to original content
     setIsEditing(false);
-    setShowColorPicker(false);
     onEditModeChange?.(false);
   };
 
@@ -298,8 +294,8 @@ const Card: React.FC<CardProps> = ({
         </div>
       </div>
 
-      {/* Color Picker */}
-      {showColorPicker && isEditing && (
+      {/* Color Picker - show whenever editing */}
+      {isEditing && (
         <div className="color-picker-container">
           <ColorPicker
             x={position.x}
@@ -308,8 +304,9 @@ const Card: React.FC<CardProps> = ({
             cardHeight={cardSize.height}
             currentColorId={colorId}
             onSelectColor={handleColorChange}
-            onClose={() => setShowColorPicker(false)}
+            onClose={() => setIsEditing(false)}
             scale={scale}
+            hasContent={content.trim().length > 0}
           />
         </div>
       )}

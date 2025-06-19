@@ -10,6 +10,7 @@ interface ColorPickerProps {
   onSelectColor: (colorId: string) => void;
   onClose: () => void;
   scale: number;
+  hasContent: boolean; // New prop to determine behavior
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({
@@ -20,11 +21,12 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   currentColorId,
   onSelectColor,
   onClose,
-  scale
+  scale,
+  hasContent
 }) => {
   // Calculate position to appear to the right of the card, or left if not enough space
-  const pickerWidth = 200;
-  const pickerHeight = 60;
+  const pickerWidth = 32; // Much smaller width for vertical layout
+  const pickerHeight = cardColorPalettes.length * 20 + 16; // Height based on number of colors
   const spacing = 8;
   
   // Position to the right of the card by default
@@ -48,7 +50,10 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
 
   const handleColorSelect = (colorId: string) => {
     onSelectColor(colorId);
-    onClose();
+    // Only close if the card has content
+    if (hasContent) {
+      onClose();
+    }
   };
 
   return (
@@ -60,9 +65,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
         style={{ pointerEvents: 'auto' }}
       />
       
-      {/* Color picker popup */}
+      {/* Color picker popup - vertical layout */}
       <div
-        className="absolute z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-3"
+        className="absolute z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-2"
         style={{
           left: `${pickerX}px`,
           top: `${pickerY}px`,
@@ -71,16 +76,15 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-xs font-medium text-gray-700 mb-2">Choose color:</div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-1">
           {cardColorPalettes.map((palette) => (
             <button
               key={palette.id}
               className={`
-                w-8 h-8 rounded-full border-2 transition-all duration-150 hover:scale-110
+                w-4 h-4 rounded-full border transition-all duration-150 hover:scale-110
                 ${palette.background.replace('bg-', 'bg-')}
                 ${currentColorId === palette.id 
-                  ? 'border-gray-800 ring-2 ring-gray-400' 
+                  ? 'border-gray-800 ring-1 ring-gray-400' 
                   : 'border-gray-300 hover:border-gray-500'
                 }
               `}
