@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import EditableLabel from './EditableLabel';
 import { CanvasLabels } from '../types';
-import { LayoutGrid, ChevronLeft, ChevronRight, Undo2, Redo2, Download, Plus } from 'lucide-react';
+import { LayoutGrid, ChevronLeft, ChevronRight, Undo2, Redo2, Download, Plus, FileText } from 'lucide-react';
 
 const Canvas: React.FC = () => {
   const [viewportMode, setViewportMode] = useState<'fixed' | 'scrollable'>('fixed');
@@ -119,6 +119,12 @@ const Canvas: React.FC = () => {
     const centerX = MIN_CANVAS_WIDTH / 2;
     const centerY = MIN_CANVAS_HEIGHT / 2;
     createNewCardAtPosition(centerX, centerY);
+  };
+
+  // Handler for New Page button
+  const handleNewPageButtonClick = () => {
+    // For now, just show an alert - this will be implemented later
+    alert('New Page functionality will be implemented when we add multi-page support!');
   };
 
   // Label update handlers
@@ -434,6 +440,13 @@ const Canvas: React.FC = () => {
               title="Redo"
             >
               <Redo2 size={16} className="text-gray-600" />
+            </button>
+            <button 
+              onClick={handleNewPageButtonClick}
+              className="p-2 rounded hover:bg-gray-100 transition-colors"
+              title="New Page"
+            >
+              <FileText size={16} className="text-gray-600" />
             </button>
             <button 
               className="p-2 rounded hover:bg-gray-100 transition-colors"
