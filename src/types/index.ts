@@ -13,6 +13,18 @@ export interface Card {
   createdBy: string;
 }
 
+export interface CanvasLabels {
+  documentTitle: string;
+  xAxisLabel: string;
+  yAxisLabel: string;
+  quadrantLabels: {
+    topRight: string;    // High Impact, High Ease - Quick Wins
+    topLeft: string;     // High Impact, Low Ease - Big Bets
+    bottomRight: string; // Low Impact, High Ease - Fill-Ins
+    bottomLeft: string;  // Low Impact, Low Ease - Money Pit
+  };
+}
+
 export interface CanvasState {
   title: string;
   xAxisLabel: string;
