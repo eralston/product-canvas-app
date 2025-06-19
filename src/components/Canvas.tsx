@@ -171,9 +171,10 @@ const Canvas: React.FC = () => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       
-      // Account for padding and header space
+      // Account for fixed header height (approximately 100px) and some padding
+      const headerHeight = 100;
       const availableWidth = viewportWidth - 32; // 16px padding on each side
-      const availableHeight = viewportHeight - 120; // ~80px for header + padding
+      const availableHeight = viewportHeight - headerHeight - 32; // Header + padding
       
       // Calculate scale to fit viewport while maintaining 16:9 aspect ratio
       const scaleX = availableWidth / MIN_CANVAS_WIDTH;
@@ -375,8 +376,8 @@ const Canvas: React.FC = () => {
 
   return (
     <div className="w-full h-screen flex flex-col bg-gray-50">
-      {/* Document Title */}
-      <div className="p-4 bg-white border-b flex-shrink-0">
+      {/* Fixed Document Title Header */}
+      <div className="fixed top-0 left-0 right-0 z-30 p-4 bg-white border-b shadow-sm">
         <EditableLabel
           initialValue={canvasLabels.documentTitle}
           onSave={handleDocumentTitleSave}
@@ -390,37 +391,39 @@ const Canvas: React.FC = () => {
         </p>
       </div>
       
-      {/* Canvas Container */}
-      {viewportMode === 'fixed' ? (
-        // Fixed mode: Canvas scales to fit viewport while maintaining 16:9, centered
-        <div className="flex-1 flex items-center justify-center p-4 min-h-0">
-          <div className="flex items-center justify-center w-full h-full">
-            {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
+      {/* Canvas Container - with top padding to account for fixed header */}
+      <div className="pt-24"> {/* Padding to account for fixed header */}
+        {viewportMode === 'fixed' ? (
+          // Fixed mode: Canvas scales to fit viewport while maintaining 16:9, centered
+          <div className="h-screen flex items-center justify-center p-4" style={{ height: 'calc(100vh - 6rem)' }}>
+            <div className="flex items-center justify-center w-full h-full">
+              {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
+            </div>
           </div>
-        </div>
-      ) : (
-        // Scrollable mode: Canvas at 100% scale with scrolling, using full available space
-        <div 
-          className="flex-1 overflow-auto bg-gray-100 min-h-0"
-          style={{
-            minWidth: '100%',
-            minHeight: '100%'
-          }}
-        >
-          {/* Canvas positioned with margin for visual breathing room */}
-          <div
+        ) : (
+          // Scrollable mode: Canvas at 100% scale with scrolling, using full available space
+          <div 
+            className="overflow-auto bg-gray-100"
             style={{
-              margin: '16px', // Comfortable margin for scrollable mode
-              display: 'inline-block' // Prevent margin collapse
+              height: 'calc(100vh - 6rem)', // Full viewport minus header
+              minWidth: '100%'
             }}
           >
-            {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
+            {/* Canvas positioned with margin for visual breathing room */}
+            <div
+              style={{
+                margin: '16px', // Comfortable margin for scrollable mode
+                display: 'inline-block' // Prevent margin collapse
+              }}
+            >
+              {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       
-      {/* Debug info - we can remove this later */}
-      <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0 font-open-sans font-light">
+      {/* Debug info - positioned fixed at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 p-2 bg-gray-100 text-xs text-gray-600 font-open-sans font-light z-30">
         Mode: {viewportMode} | Scale: {Math.round(canvasScale * 100)}% | Canvas: {MIN_CANVAS_WIDTH}x{MIN_CANVAS_HEIGHT}px | Cards: {cards.length}
       </div>
     </div>
