@@ -90,7 +90,17 @@ const Card: React.FC<CardProps> = ({
 
   const cardSize = calculateCardSize(isEditing ? editContent : content);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  // Helper function to extract coordinates from mouse or touch events
+  const getEventCoordinates = (e: MouseEvent | TouchEvent) => {
+    if ('touches' in e && e.touches.length > 0) {
+      return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+    } else if ('clientX' in e) {
+      return { clientX: e.clientX, clientY: e.clientY };
+    }
+    return { clientX: 0, clientY: 0 };
+  };
+
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
     if (isEditing) return; // Don't drag while editing
     
     e.preventDefault();
@@ -102,10 +112,12 @@ const Card: React.FC<CardProps> = ({
     if (!canvas) return;
     
     const canvasRect = canvas.getBoundingClientRect();
+    const coords = getEventCoordinates(e.nativeEvent);
+    
     // Account for canvas scaling when calculating drag offset
     setDragOffset({
-      x: (e.clientX - canvasRect.left) / scale - position.x,
-      y: (e.clientY - canvasRect.top) / scale - position.y
+      x: (coords.clientX - canvasRect.left) / scale - position.x,
+      y: (coords.clientY - canvasRect.top) / scale - position.y
     });
   };
 
@@ -193,17 +205,20 @@ const Card: React.FC<CardProps> = ({
   }, [isEditing, editContent]); // Include editContent as dependency to ensure latest content is saved
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleDragMove = (e: MouseEvent | TouchEvent) => {
       if (!isDragging || !cardRef.current || isEditing) return;
+
+      e.preventDefault(); // Prevent scrolling and other default behaviors
 
       const canvas = cardRef.current.parentElement;
       if (!canvas) return;
 
       const canvasRect = canvas.getBoundingClientRect();
+      const coords = getEventCoordinates(e);
       
       // Account for canvas scaling when calculating new position
-      const newX = (e.clientX - canvasRect.left) / scale - dragOffset.x;
-      const newY = (e.clientY - canvasRect.top) / scale - dragOffset.y;
+      const newX = (coords.clientX - canvasRect.left) / scale - dragOffset.x;
+      const newY = (coords.clientY - canvasRect.top) / scale - dragOffset.y;
 
       const constrainedX = Math.max(0, Math.min(newX, canvasWidth - cardSize.width));
       const constrainedY = Math.max(0, Math.min(newY, canvasHeight - cardSize.height));
@@ -215,18 +230,24 @@ const Card: React.FC<CardProps> = ({
       onPositionChange(id, constrainedX, constrainedY);
     };
 
-    const handleMouseUp = () => {
+    const handleDragEnd = (e: MouseEvent | TouchEvent) => {
+      e.preventDefault();
       setIsDragging(false);
     };
 
     if (isDragging && !isEditing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      // Add both mouse and touch event listeners
+      document.addEventListener('mousemove', handleDragMove);
+      document.addEventListener('mouseup', handleDragEnd);
+      document.addEventListener('touchmove', handleDragMove, { passive: false });
+      document.addEventListener('touchend', handleDragEnd);
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mousemove', handleDragMove);
+      document.removeEventListener('mouseup', handleDragEnd);
+      document.removeEventListener('touchmove', handleDragMove);
+      document.removeEventListener('touchend', handleDragEnd);
     };
   }, [isDragging, dragOffset, canvasWidth, canvasHeight, isEditing, cardSize, scale, id, onPositionChange]);
 
@@ -264,9 +285,11 @@ const Card: React.FC<CardProps> = ({
           height: `${cardSize.height}px`,
           zIndex: zIndex,
           boxShadow: cardShadow,
-          transform: isDragging ? 'translateY(-2px)' : 'translateY(0px)'
+          transform: isDragging ? 'translateY(-2px)' : 'translateY(0px)',
+          touchAction: 'none' // Prevent default touch behaviors
         }}
-        onMouseDown={handleMouseDown}
+        onMouseDown={handleDragStart}
+        onTouchStart={handleDragStart}
         onDoubleClick={handleDoubleClick}
       >
         <div className="p-2 h-full flex flex-col">

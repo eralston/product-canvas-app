@@ -214,8 +214,8 @@ const Canvas: React.FC = () => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       
-      // Account for fixed header height (96px) and some padding
-      const headerHeight = 96;
+      // Responsive header height - smaller on mobile
+      const headerHeight = viewportWidth < 768 ? 64 : 96; // 16 on mobile, 24 on desktop
       const availableWidth = viewportWidth - 32; // 16px padding on each side
       const availableHeight = viewportHeight - headerHeight - 32; // Header + padding
       
@@ -420,88 +420,90 @@ const Canvas: React.FC = () => {
 
   return (
     <div className="w-full h-screen flex flex-col bg-gray-50">
-      {/* New Header with App Identity, Document Context, and Page Actions */}
-      <div className="fixed top-0 left-0 right-0 z-30 h-24 bg-white border-b shadow-sm flex items-center justify-between px-6">
+      {/* Responsive Header with App Identity, Document Context, and Page Actions */}
+      <div className="fixed top-0 left-0 right-0 z-30 h-24 md:h-16 bg-white border-b shadow-sm flex items-center justify-between px-3 md:px-6">
         {/* Left Section: App Identity */}
-        <div className="flex items-center gap-3">
-          <LayoutGrid size={28} className="text-blue-600" />
-          <span className="font-open-sans font-extrabold text-3xl text-gray-800 tracking-tight">
+        <div className="flex items-center gap-2 md:gap-3">
+          <LayoutGrid size={24} className="text-blue-600 md:w-7 md:h-7" />
+          <span className="hidden md:block font-open-sans font-extrabold text-2xl md:text-3xl text-gray-800 tracking-tight">
             Quadrant
           </span>
         </div>
 
-        {/* Middle Section: Document Context */}
-        <div className="flex items-center gap-6">
-          {/* Document Title */}
-          <EditableLabel
-            initialValue={canvasLabels.documentTitle}
-            onSave={handleDocumentTitleSave}
-            characterLimit={60}
-            displayClassName="text-lg font-semibold text-gray-800"
-            inputClassName="text-lg font-semibold"
-          />
+        {/* Middle Section: Document Context - Responsive layout */}
+        <div className="flex items-center gap-2 md:gap-6 flex-1 justify-center max-w-2xl">
+          {/* Document Title - Smaller on mobile */}
+          <div className="flex-shrink min-w-0">
+            <EditableLabel
+              initialValue={canvasLabels.documentTitle}
+              onSave={handleDocumentTitleSave}
+              characterLimit={60}
+              displayClassName="text-sm md:text-lg font-semibold text-gray-800 truncate"
+              inputClassName="text-sm md:text-lg font-semibold"
+            />
+          </div>
           
-          {/* Page Navigation */}
-          <div className="flex items-center gap-2 text-gray-600">
+          {/* Page Navigation - Hidden on small screens */}
+          <div className="hidden sm:flex items-center gap-2 text-gray-600 flex-shrink-0">
             <button className="p-1 rounded hover:bg-gray-100 transition-colors">
               <ChevronLeft size={16} />
             </button>
-            <span className="text-sm font-medium px-2">Page 1 of 3</span>
+            <span className="text-xs md:text-sm font-medium px-2 whitespace-nowrap">Page 1 of 3</span>
             <button className="p-1 rounded hover:bg-gray-100 transition-colors">
               <ChevronRight size={16} />
             </button>
           </div>
 
-          {/* New Page Button - Secondary style with icon and text */}
+          {/* New Page Button - Icon only on mobile */}
           <button 
             onClick={handleNewPageButtonClick}
-            className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200"
+            className="flex items-center gap-2 px-2 md:px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200 flex-shrink-0"
           >
             <FileText size={16} />
-            New Page
+            <span className="hidden md:inline">New Page</span>
           </button>
 
-          {/* Document Actions */}
-          <div className="flex items-center gap-1">
+          {/* Document Actions - Smaller on mobile */}
+          <div className="hidden sm:flex items-center gap-1 flex-shrink-0">
             <button 
-              className="p-2 rounded hover:bg-gray-100 transition-colors"
+              className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
               title="Undo"
             >
-              <Undo2 size={16} className="text-gray-600" />
+              <Undo2 size={14} className="text-gray-600 md:w-4 md:h-4" />
             </button>
             <button 
-              className="p-2 rounded hover:bg-gray-100 transition-colors"
+              className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
               title="Redo"
             >
-              <Redo2 size={16} className="text-gray-600" />
+              <Redo2 size={14} className="text-gray-600 md:w-4 md:h-4" />
             </button>
             <button 
-              className="p-2 rounded hover:bg-gray-100 transition-colors"
+              className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
               title="Export"
             >
-              <Download size={16} className="text-gray-600" />
+              <Download size={14} className="text-gray-600 md:w-4 md:h-4" />
             </button>
           </div>
         </div>
 
         {/* Right Section: Page Actions */}
-        <div className="flex items-center gap-3">
-          {/* New Card Button - Primary style */}
+        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+          {/* New Card Button - Icon only on mobile */}
           <button 
             onClick={handleNewCardButtonClick}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="flex items-center gap-2 px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
             <Plus size={16} />
-            New Card
+            <span className="hidden md:inline">New Card</span>
           </button>
         </div>
       </div>
       
-      {/* Canvas Container - with top padding to account for fixed header */}
-      <div className="pt-24"> {/* Padding to account for fixed header */}
+      {/* Canvas Container - with responsive top padding to account for fixed header */}
+      <div className="pt-24 md:pt-16"> {/* Responsive padding to account for fixed header */}
         {viewportMode === 'fixed' ? (
           // Fixed mode: Canvas scales to fit viewport while maintaining 16:9, centered
-          <div className="h-screen flex items-center justify-center p-4" style={{ height: 'calc(100vh - 6rem)' }}>
+          <div className="h-screen flex items-center justify-center p-2 md:p-4" style={{ height: 'calc(100vh - 6rem)' }}>
             <div className="flex items-center justify-center w-full h-full">
               {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
             </div>
@@ -511,16 +513,17 @@ const Canvas: React.FC = () => {
           <div 
             className="overflow-auto bg-gray-100"
             style={{
-              height: 'calc(100vh - 6rem)', // Full viewport minus header
+              height: 'calc(100vh - 6rem)', // Full viewport minus header (responsive)
               minWidth: '100%'
             }}
           >
             {/* Canvas positioned with margin for visual breathing room */}
             <div
               style={{
-                margin: '16px', // Comfortable margin for scrollable mode
+                margin: '8px', // Smaller margin on mobile
                 display: 'inline-block' // Prevent margin collapse
               }}
+              className="md:m-4" // Larger margin on desktop
             >
               {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
             </div>
