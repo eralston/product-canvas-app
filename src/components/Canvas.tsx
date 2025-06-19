@@ -13,16 +13,16 @@ const Canvas: React.FC = () => {
   const MIN_CANVAS_WIDTH = 800;
   const MIN_CANVAS_HEIGHT = 450; // 16:9 ratio
 
-  // Canvas labels state with default "Ease vs Impact" values
+  // Canvas labels state with default "Effort vs Impact" values
   const [canvasLabels, setCanvasLabels] = useState<CanvasLabels>({
-    documentTitle: 'Ease vs Impact Quadrant',
-    xAxisLabel: 'Ease',
+    documentTitle: 'Effort vs Impact Quadrant',
+    xAxisLabel: 'Effort',
     yAxisLabel: 'Impact',
     quadrantLabels: {
-      topRight: 'Quick Wins',    // High Impact, High Ease
-      topLeft: 'Big Bets',       // High Impact, Low Ease
-      bottomRight: 'Fill-Ins',   // Low Impact, High Ease
-      bottomLeft: 'Money Pit'    // Low Impact, Low Ease
+      topRight: 'Big Bets',       // High Impact, High Effort
+      topLeft: 'Quick Wins',      // High Impact, Low Effort
+      bottomRight: 'Money Pit',   // Low Impact, High Effort
+      bottomLeft: 'Fill-Ins'      // Low Impact, Low Effort
     }
   });
 
@@ -269,7 +269,7 @@ const Canvas: React.FC = () => {
       </div>
 
       {/* Quadrant Labels with darker background overlays */}
-      {/* Top-Left Quadrant: Big Bets (High Impact, Low Ease) */}
+      {/* Top-Left Quadrant: Quick Wins (High Impact, Low Effort) */}
       <div 
         className="absolute top-0 left-0 w-1/2 h-1/2 pointer-events-none"
         style={{
@@ -288,7 +288,7 @@ const Canvas: React.FC = () => {
         </div>
       </div>
 
-      {/* Top-Right Quadrant: Quick Wins (High Impact, High Ease) */}
+      {/* Top-Right Quadrant: Big Bets (High Impact, High Effort) */}
       <div 
         className="absolute top-0 right-0 w-1/2 h-1/2 pointer-events-none"
         style={{
@@ -307,7 +307,7 @@ const Canvas: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom-Left Quadrant: Money Pit (Low Impact, Low Ease) */}
+      {/* Bottom-Left Quadrant: Fill-Ins (Low Impact, Low Effort) */}
       <div 
         className="absolute bottom-0 left-0 w-1/2 h-1/2 pointer-events-none"
         style={{
@@ -326,7 +326,7 @@ const Canvas: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom-Right Quadrant: Fill-Ins (Low Impact, High Ease) */}
+      {/* Bottom-Right Quadrant: Money Pit (Low Impact, High Effort) */}
       <div 
         className="absolute bottom-0 right-0 w-1/2 h-1/2 pointer-events-none"
         style={{
