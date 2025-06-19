@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import EditableLabel from './EditableLabel';
 import { CanvasLabels } from '../types';
+import { LayoutGrid, ChevronLeft, ChevronRight, Undo2, Redo2, Download, Plus } from 'lucide-react';
 
 const Canvas: React.FC = () => {
   const [viewportMode, setViewportMode] = useState<'fixed' | 'scrollable'>('fixed');
@@ -83,6 +84,43 @@ const Canvas: React.FC = () => {
     );
   };
 
+  // Extracted card creation logic
+  const createNewCardAtPosition = (x: number, y: number) => {
+    const newCardId = `card${nextCardId}`;
+    const newCard = {
+      id: newCardId,
+      content: '',
+      x: Math.max(0, Math.min(x - 36, MIN_CANVAS_WIDTH - 72)), // Center card on position, constrain to canvas
+      y: Math.max(0, Math.min(y - 36, MIN_CANVAS_HEIGHT - 72)),
+      colorId: 'yellow', // Default color for new cards
+    };
+
+    // Add new card
+    setCards(prev => [...prev, newCard]);
+    
+    // Set z-index for new card
+    const newZIndex = nextZIndex + 1;
+    setNextZIndex(newZIndex);
+    setCardZIndices(prev => ({
+      ...prev,
+      [newCardId]: newZIndex
+    }));
+
+    // Set this card as editing
+    setEditingCardId(newCardId);
+    
+    // Increment card counter for next card
+    setNextCardId(prev => prev + 1);
+  };
+
+  // Handler for New Card button
+  const handleNewCardButtonClick = () => {
+    // Create new card at center of canvas
+    const centerX = MIN_CANVAS_WIDTH / 2;
+    const centerY = MIN_CANVAS_HEIGHT / 2;
+    createNewCardAtPosition(centerX, centerY);
+  };
+
   // Label update handlers
   const handleDocumentTitleSave = (newTitle: string) => {
     setCanvasLabels(prev => ({
@@ -138,32 +176,7 @@ const Canvas: React.FC = () => {
     const actualClickX = clickX / canvasScale;
     const actualClickY = clickY / canvasScale;
 
-    // Create new card at click position
-    const newCardId = `card${nextCardId}`;
-    const newCard = {
-      id: newCardId,
-      content: '',
-      x: Math.max(0, Math.min(actualClickX - 36, MIN_CANVAS_WIDTH - 72)), // Center card on click, constrain to canvas
-      y: Math.max(0, Math.min(actualClickY - 36, MIN_CANVAS_HEIGHT - 72)),
-      colorId: 'yellow', // Default color for new cards
-    };
-
-    // Add new card
-    setCards(prev => [...prev, newCard]);
-    
-    // Set z-index for new card
-    const newZIndex = nextZIndex + 1;
-    setNextZIndex(newZIndex);
-    setCardZIndices(prev => ({
-      ...prev,
-      [newCardId]: newZIndex
-    }));
-
-    // Set this card as editing
-    setEditingCardId(newCardId);
-    
-    // Increment card counter for next card
-    setNextCardId(prev => prev + 1);
+    createNewCardAtPosition(actualClickX, actualClickY);
   };
   
   useEffect(() => {
@@ -171,8 +184,8 @@ const Canvas: React.FC = () => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       
-      // Account for fixed header height (approximately 100px) and some padding
-      const headerHeight = 100;
+      // Account for fixed header height (96px) and some padding
+      const headerHeight = 96;
       const availableWidth = viewportWidth - 32; // 16px padding on each side
       const availableHeight = viewportHeight - headerHeight - 32; // Header + padding
       
@@ -376,19 +389,71 @@ const Canvas: React.FC = () => {
 
   return (
     <div className="w-full h-screen flex flex-col bg-gray-50">
-      {/* Fixed Document Title Header */}
-      <div className="fixed top-0 left-0 right-0 z-30 p-4 bg-white border-b shadow-sm">
-        <EditableLabel
-          initialValue={canvasLabels.documentTitle}
-          onSave={handleDocumentTitleSave}
-          characterLimit={60}
-          displayClassName="text-xl font-semibold text-gray-800"
-          inputClassName="text-xl font-semibold"
-          className="mb-2"
-        />
-        <p className="text-sm text-gray-600 font-open-sans font-light">
-          Drag cards around, double-click to edit and change colors, or double-click empty space to create new cards
-        </p>
+      {/* New Header with App Identity, Document Context, and Page Actions */}
+      <div className="fixed top-0 left-0 right-0 z-30 h-24 bg-white border-b shadow-sm flex items-center justify-between px-6">
+        {/* Left Section: App Identity */}
+        <div className="flex items-center gap-3">
+          <LayoutGrid size={28} className="text-blue-600" />
+          <span className="font-open-sans font-extrabold text-3xl text-gray-800 tracking-tight">
+            Quadrant
+          </span>
+        </div>
+
+        {/* Middle Section: Document Context */}
+        <div className="flex items-center gap-6">
+          {/* Document Title */}
+          <EditableLabel
+            initialValue={canvasLabels.documentTitle}
+            onSave={handleDocumentTitleSave}
+            characterLimit={60}
+            displayClassName="text-lg font-semibold text-gray-800"
+            inputClassName="text-lg font-semibold"
+          />
+          
+          {/* Page Navigation */}
+          <div className="flex items-center gap-2 text-gray-600">
+            <button className="p-1 rounded hover:bg-gray-100 transition-colors">
+              <ChevronLeft size={16} />
+            </button>
+            <span className="text-sm font-medium px-2">Page 1 of 3</span>
+            <button className="p-1 rounded hover:bg-gray-100 transition-colors">
+              <ChevronRight size={16} />
+            </button>
+          </div>
+
+          {/* Document Actions */}
+          <div className="flex items-center gap-1">
+            <button 
+              className="p-2 rounded hover:bg-gray-100 transition-colors"
+              title="Undo"
+            >
+              <Undo2 size={16} className="text-gray-600" />
+            </button>
+            <button 
+              className="p-2 rounded hover:bg-gray-100 transition-colors"
+              title="Redo"
+            >
+              <Redo2 size={16} className="text-gray-600" />
+            </button>
+            <button 
+              className="p-2 rounded hover:bg-gray-100 transition-colors"
+              title="Export"
+            >
+              <Download size={16} className="text-gray-600" />
+            </button>
+          </div>
+        </div>
+
+        {/* Right Section: Page Actions */}
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={handleNewCardButtonClick}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            <Plus size={16} />
+            New Card
+          </button>
+        </div>
       </div>
       
       {/* Canvas Container - with top padding to account for fixed header */}
