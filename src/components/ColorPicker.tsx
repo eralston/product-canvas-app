@@ -50,10 +50,8 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
 
   const handleColorSelect = (colorId: string) => {
     onSelectColor(colorId);
-    // Only close if the card has content
-    if (hasContent) {
-      onClose();
-    }
+    // The color picker doesn't close itself anymore
+    // The parent Card component handles closing logic based on content
   };
 
   return (
