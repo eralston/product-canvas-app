@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { CardColorPalette, getColorPaletteById } from '../utils/cardColors';
+import ColorPicker from './ColorPicker';
 
 interface CardProps {
   id: string;
@@ -9,8 +11,10 @@ interface CardProps {
   canvasHeight: number;
   onZIndexChange: (id: string) => void;
   onContentChange: (id: string, newContent: string) => void;
-  onPositionChange: (id: string, x: number, y: number) => void; // New prop
+  onPositionChange: (id: string, x: number, y: number) => void;
+  onColorChange: (id: string, colorId: string) => void;
   zIndex: number;
+  colorId: string;
   startInEditMode?: boolean;
   onEditModeChange?: (isEditing: boolean) => void;
   scale?: number;
@@ -25,8 +29,10 @@ const Card: React.FC<CardProps> = ({
   canvasHeight,
   onZIndexChange,
   onContentChange,
-  onPositionChange, // New prop
+  onPositionChange,
+  onColorChange,
   zIndex,
+  colorId,
   startInEditMode = false,
   onEditModeChange,
   scale = 1
@@ -36,6 +42,7 @@ const Card: React.FC<CardProps> = ({
   const [isEditing, setIsEditing] = useState(startInEditMode);
   const [editContent, setEditContent] = useState(content);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -44,6 +51,9 @@ const Card: React.FC<CardProps> = ({
   const MIN_CARD_HEIGHT = 72;
   const MAX_CARD_WIDTH = 164;
   const MAX_CARD_HEIGHT = 124;
+
+  // Get color palette for this card
+  const colorPalette = getColorPaletteById(colorId);
 
   // Update position when initialX or initialY changes (when switching modes)
   useEffect(() => {
@@ -103,6 +113,7 @@ const Card: React.FC<CardProps> = ({
     e.stopPropagation(); // Prevent canvas double-click when double-clicking card
     setIsEditing(true);
     setEditContent(content);
+    setShowColorPicker(true); // Show color picker when entering edit mode
     onZIndexChange(id); // Bring to front when editing
     onEditModeChange?.(true);
   };
@@ -110,12 +121,14 @@ const Card: React.FC<CardProps> = ({
   const saveContent = () => {
     onContentChange(id, editContent);
     setIsEditing(false);
+    setShowColorPicker(false);
     onEditModeChange?.(false);
   };
 
   const cancelEdit = () => {
     setEditContent(content); // Reset to original content
     setIsEditing(false);
+    setShowColorPicker(false);
     onEditModeChange?.(false);
   };
 
@@ -138,6 +151,10 @@ const Card: React.FC<CardProps> = ({
     // Allow default behavior for copy (Ctrl+C), cut (Ctrl+X), paste (Ctrl+V)
   };
 
+  const handleColorChange = (newColorId: string) => {
+    onColorChange(id, newColorId);
+  };
+
   useEffect(() => {
     if (isEditing && textareaRef.current) {
       // Focus and select all text when entering edit mode
@@ -154,6 +171,11 @@ const Card: React.FC<CardProps> = ({
 
     const handleClickOutside = (e: MouseEvent) => {
       if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
+        // Check if click is on color picker - if so, don't close
+        const target = e.target as Element;
+        if (target.closest('.color-picker-container')) {
+          return;
+        }
         saveContent();
       }
     };
@@ -207,69 +229,91 @@ const Card: React.FC<CardProps> = ({
   const currentCharCount = editContent.length;
   const remainingChars = CHARACTER_LIMIT - currentCharCount;
 
+  // Build dynamic CSS classes based on color palette
+  const cardClasses = `
+    absolute rounded-lg select-none transition-all duration-200 ease-out border-2
+    ${colorPalette.background}
+    ${isEditing 
+      ? `${colorPalette.editingBorder} cursor-text` 
+      : isDragging 
+        ? `${colorPalette.draggingBorder} cursor-move` 
+        : `${colorPalette.border} ${colorPalette.hoverBorder} cursor-move`
+    }
+  `;
+
+  // Build dynamic shadow based on color palette
+  const cardShadow = isEditing
+    ? '0 0 0 2px rgba(59, 130, 246, 0.3), 0 8px 25px -5px rgba(0, 0, 0, 0.15)'
+    : isDragging 
+      ? `0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05), 0 8px 16px -4px ${colorPalette.shadowSecondary}`
+      : `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px 0 ${colorPalette.shadowPrimary}`;
+
   return (
-    <div
-      ref={cardRef}
-      className={`
-        absolute bg-yellow-200 rounded-lg
-        select-none transition-all duration-200 ease-out border-2
-        ${isEditing 
-          ? 'border-blue-500 cursor-text' 
-          : isDragging 
-            ? 'border-amber-600 cursor-move' 
-            : 'border-yellow-300 hover:border-yellow-400 cursor-move'
-        }
-      `}
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        width: `${cardSize.width}px`,
-        height: `${cardSize.height}px`,
-        zIndex: zIndex,
-        // Dramatic shadow changes for visual appeal
-        boxShadow: isEditing
-          ? '0 0 0 2px rgba(59, 130, 246, 0.3), 0 8px 25px -5px rgba(0, 0, 0, 0.15)'
-          : isDragging 
-            ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05), 0 8px 16px -4px rgba(251, 191, 36, 0.4)'
-            : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(251, 191, 36, 0.2)',
-        // Very subtle transform - let shadows and border do the heavy lifting
-        transform: isDragging ? 'translateY(-2px)' : 'translateY(0px)'
-      }}
-      onMouseDown={handleMouseDown}
-      onDoubleClick={handleDoubleClick}
-    >
-      <div className="p-2 h-full flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
-          {isEditing ? (
-            <textarea
-              ref={textareaRef}
-              value={editContent}
-              onChange={handleContentChange}
-              onKeyDown={handleKeyDown}
-              className="w-full h-full resize-none bg-transparent text-xs text-yellow-800 font-medium text-center leading-tight border-none outline-none placeholder-yellow-600"
-              style={{ 
-                minHeight: '100%',
-                fontFamily: 'inherit'
-              }}
-              placeholder="Type your note..."
-            />
-          ) : (
-            <p className="text-xs text-yellow-800 font-medium text-center leading-tight whitespace-pre-wrap">
-              {content || 'Double-click to edit'}
-            </p>
+    <>
+      <div
+        ref={cardRef}
+        className={cardClasses}
+        style={{
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          width: `${cardSize.width}px`,
+          height: `${cardSize.height}px`,
+          zIndex: zIndex,
+          boxShadow: cardShadow,
+          transform: isDragging ? 'translateY(-2px)' : 'translateY(0px)'
+        }}
+        onMouseDown={handleMouseDown}
+        onDoubleClick={handleDoubleClick}
+      >
+        <div className="p-2 h-full flex flex-col">
+          <div className="flex-1 flex items-center justify-center">
+            {isEditing ? (
+              <textarea
+                ref={textareaRef}
+                value={editContent}
+                onChange={handleContentChange}
+                onKeyDown={handleKeyDown}
+                className={`w-full h-full resize-none bg-transparent text-xs font-medium text-center leading-tight border-none outline-none ${colorPalette.text} ${colorPalette.placeholder}`}
+                style={{ 
+                  minHeight: '100%',
+                  fontFamily: 'inherit'
+                }}
+                placeholder="Type your note..."
+              />
+            ) : (
+              <p className={`text-xs font-medium text-center leading-tight whitespace-pre-wrap ${colorPalette.text}`}>
+                {content || 'Double-click to edit'}
+              </p>
+            )}
+          </div>
+          
+          {/* Character counter - show current/limit format when editing and getting close to limit */}
+          {isEditing && remainingChars <= 20 && (
+            <div className="text-center mt-1">
+              <span className={`text-xs font-medium ${remainingChars <= 10 ? colorPalette.charCounterWarning : colorPalette.charCounterNormal}`}>
+                {currentCharCount}/{CHARACTER_LIMIT}
+              </span>
+            </div>
           )}
         </div>
-        
-        {/* Character counter - show current/limit format when editing and getting close to limit */}
-        {isEditing && remainingChars <= 20 && (
-          <div className="text-center mt-1">
-            <span className={`text-xs font-medium ${remainingChars <= 10 ? 'text-red-600' : 'text-yellow-700'}`}>
-              {currentCharCount}/{CHARACTER_LIMIT}
-            </span>
-          </div>
-        )}
       </div>
-    </div>
+
+      {/* Color Picker */}
+      {showColorPicker && isEditing && (
+        <div className="color-picker-container">
+          <ColorPicker
+            x={position.x}
+            y={position.y}
+            cardWidth={cardSize.width}
+            cardHeight={cardSize.height}
+            currentColorId={colorId}
+            onSelectColor={handleColorChange}
+            onClose={() => setShowColorPicker(false)}
+            scale={scale}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

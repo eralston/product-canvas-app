@@ -19,3 +19,6 @@ export interface CanvasState {
   yAxisLabel: string;
   cards: Card[];
 }
+
+// Re-export from cardColors utility
+export type { CardColorPalette } from '../utils/cardColors';

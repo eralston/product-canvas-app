@@ -11,13 +11,14 @@ const Canvas: React.FC = () => {
   const MIN_CANVAS_WIDTH = 800;
   const MIN_CANVAS_HEIGHT = 450; // 16:9 ratio
 
-  // Sample card data - now with editable content
+  // Sample card data - now with editable content and color
   const [cards, setCards] = useState([
     {
       id: 'card1',
       content: 'Sample Card\n(Double-click to edit)',
       x: MIN_CANVAS_WIDTH / 2 - 36,
       y: MIN_CANVAS_HEIGHT / 2 - 36,
+      colorId: 'yellow', // Default color
     }
   ]);
 
@@ -41,6 +42,16 @@ const Canvas: React.FC = () => {
       prevCards.map(card => 
         card.id === cardId 
           ? { ...card, content: newContent }
+          : card
+      )
+    );
+  };
+
+  const handleCardColorChange = (cardId: string, newColorId: string) => {
+    setCards(prevCards => 
+      prevCards.map(card => 
+        card.id === cardId 
+          ? { ...card, colorId: newColorId }
           : card
       )
     );
@@ -87,6 +98,7 @@ const Canvas: React.FC = () => {
       content: '',
       x: Math.max(0, Math.min(actualClickX - 36, MIN_CANVAS_WIDTH - 72)), // Center card on click, constrain to canvas
       y: Math.max(0, Math.min(actualClickY - 36, MIN_CANVAS_HEIGHT - 72)),
+      colorId: 'yellow', // Default color for new cards
     };
 
     // Add new card
@@ -172,7 +184,9 @@ const Canvas: React.FC = () => {
           onZIndexChange={handleCardZIndexChange}
           onContentChange={handleCardContentChange}
           onPositionChange={handleCardPositionChange}
+          onColorChange={handleCardColorChange}
           zIndex={cardZIndices[card.id] || 1}
+          colorId={card.colorId}
           startInEditMode={editingCardId === card.id}
           onEditModeChange={(isEditing) => {
             if (!isEditing && editingCardId === card.id) {
@@ -191,7 +205,7 @@ const Canvas: React.FC = () => {
       <div className="p-4 bg-white border-b flex-shrink-0">
         <h1 className="text-xl font-semibold text-gray-800">Interactive Canvas</h1>
         <p className="text-sm text-gray-600 mt-1">
-          Drag cards around, double-click to edit, or double-click empty space to create new cards
+          Drag cards around, double-click to edit and change colors, or double-click empty space to create new cards
         </p>
       </div>
       
