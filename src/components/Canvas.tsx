@@ -203,8 +203,8 @@ const Canvas: React.FC = () => {
     <div className="w-full h-screen flex flex-col bg-gray-50">
       {/* Document Title */}
       <div className="p-4 bg-white border-b flex-shrink-0">
-        <h1 className="text-xl font-semibold text-gray-800 font-urbanist">Interactive Canvas</h1>
-        <p className="text-sm text-gray-600 mt-1 font-urbanist font-light">
+        <h1 className="text-xl font-semibold text-gray-800">Interactive Canvas</h1>
+        <p className="text-sm text-gray-600 mt-1">
           Drag cards around, double-click to edit and change colors, or double-click empty space to create new cards
         </p>
       </div>
@@ -239,7 +239,7 @@ const Canvas: React.FC = () => {
       </div>
       
       {/* Debug info - we can remove this later */}
-      <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0 font-urbanist font-light">
+      <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0">
         Mode: {viewportMode} | Scale: {Math.round(canvasScale * 100)}% | Canvas: {MIN_CANVAS_WIDTH}x{MIN_CANVAS_HEIGHT}px | Cards: {cards.length}
       </div>
     </div>
