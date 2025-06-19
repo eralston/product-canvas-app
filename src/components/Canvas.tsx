@@ -152,23 +152,39 @@ const Canvas: React.FC = () => {
 
   const renderCanvas = (canvasWidth: number, canvasHeight: number) => (
     <div 
-      className="bg-white border border-gray-200 rounded-lg shadow-sm relative overflow-hidden canvas-area"
+      className="bg-gradient-to-br from-slate-50 to-gray-100 border-2 border-slate-200 rounded-xl shadow-sm relative overflow-hidden canvas-area"
       style={{
         width: `${canvasWidth}px`,
         height: `${canvasHeight}px`,
         transform: `scale(${canvasScale})`,
         transformOrigin: 'center center',
+        backgroundImage: `
+          radial-gradient(circle at 25% 25%, rgba(148, 163, 184, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, rgba(148, 163, 184, 0.03) 0%, transparent 50%)
+        `
       }}
       onDoubleClick={handleCanvasDoubleClick}
     >
-      {/* Quadrant dividers */}
+      {/* Enhanced Quadrant dividers with subtle styling */}
       <div className="absolute inset-0 flex pointer-events-none">
-        <div className="flex-1 border-r border-gray-300 quadrant-divider"></div>
-        <div className="flex-1 quadrant-divider"></div>
+        <div className="flex-1 border-r-2 border-slate-300/60 quadrant-divider" 
+             style={{
+               background: 'linear-gradient(to bottom, rgba(148, 163, 184, 0.02) 0%, rgba(148, 163, 184, 0.01) 100%)'
+             }}></div>
+        <div className="flex-1 quadrant-divider"
+             style={{
+               background: 'linear-gradient(to bottom, rgba(148, 163, 184, 0.01) 0%, rgba(148, 163, 184, 0.02) 100%)'
+             }}></div>
       </div>
       <div className="absolute inset-0 flex flex-col pointer-events-none">
-        <div className="flex-1 border-b border-gray-300 quadrant-divider"></div>
-        <div className="flex-1 quadrant-divider"></div>
+        <div className="flex-1 border-b-2 border-slate-300/60 quadrant-divider"
+             style={{
+               background: 'linear-gradient(to right, rgba(148, 163, 184, 0.02) 0%, rgba(148, 163, 184, 0.01) 100%)'
+             }}></div>
+        <div className="flex-1 quadrant-divider"
+             style={{
+               background: 'linear-gradient(to right, rgba(148, 163, 184, 0.01) 0%, rgba(148, 163, 184, 0.02) 100%)'
+             }}></div>
       </div>
       
       {/* Cards */}
@@ -200,17 +216,17 @@ const Canvas: React.FC = () => {
   );
 
   return (
-    <div className="w-full h-screen flex flex-col bg-gray-50">
-      {/* Document Title */}
-      <div className="p-4 bg-white border-b flex-shrink-0">
-        <h1 className="text-xl font-semibold text-gray-800">Interactive Canvas</h1>
-        <p className="text-sm text-gray-600 mt-1">
+    <div className="w-full h-screen flex flex-col bg-gradient-to-br from-slate-100 to-gray-200">
+      {/* Enhanced Document Title with subtle depth */}
+      <div className="p-6 bg-white/95 backdrop-blur-sm border-b-2 border-slate-200 flex-shrink-0 shadow-sm">
+        <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Interactive Canvas</h1>
+        <p className="text-sm text-slate-600 mt-2 font-medium">
           Drag cards around, double-click to edit and change colors, or double-click empty space to create new cards
         </p>
       </div>
       
       {/* Canvas Container */}
-      <div className="flex-1 flex items-center justify-center p-4 min-h-0">
+      <div className="flex-1 flex items-center justify-center p-6 min-h-0">
         {viewportMode === 'fixed' ? (
           // Fixed mode: Canvas scales to fit viewport while maintaining 16:9, centered
           <div className="flex items-center justify-center w-full h-full">
@@ -219,7 +235,7 @@ const Canvas: React.FC = () => {
         ) : (
           // Scrollable mode: Canvas at 100% scale with scrolling
           <div 
-            className="overflow-auto w-full h-full border border-gray-300 rounded-lg bg-gray-100"
+            className="overflow-auto w-full h-full border-2 border-slate-300 rounded-xl bg-gradient-to-br from-slate-200 to-gray-300 shadow-inner"
             style={{
               minWidth: '100%',
               minHeight: '100%'
@@ -228,7 +244,7 @@ const Canvas: React.FC = () => {
             {/* Canvas positioned with margin for visual breathing room */}
             <div
               style={{
-                margin: '16px', // Comfortable margin for scrollable mode
+                margin: '24px', // More generous margin for scrollable mode
                 display: 'inline-block' // Prevent margin collapse
               }}
             >
@@ -238,9 +254,15 @@ const Canvas: React.FC = () => {
         )}
       </div>
       
-      {/* Debug info - we can remove this later */}
-      <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0">
-        Mode: {viewportMode} | Scale: {Math.round(canvasScale * 100)}% | Canvas: {MIN_CANVAS_WIDTH}x{MIN_CANVAS_HEIGHT}px | Cards: {cards.length}
+      {/* Enhanced debug info with better styling */}
+      <div className="px-6 py-3 bg-slate-800/95 backdrop-blur-sm text-xs text-slate-300 flex-shrink-0 font-mono border-t border-slate-700">
+        <span className="text-slate-400">Mode:</span> <span className="text-white font-semibold">{viewportMode}</span> 
+        <span className="mx-3 text-slate-500">|</span> 
+        <span className="text-slate-400">Scale:</span> <span className="text-white font-semibold">{Math.round(canvasScale * 100)}%</span> 
+        <span className="mx-3 text-slate-500">|</span> 
+        <span className="text-slate-400">Canvas:</span> <span className="text-white font-semibold">{MIN_CANVAS_WIDTH}x{MIN_CANVAS_HEIGHT}px</span> 
+        <span className="mx-3 text-slate-500">|</span> 
+        <span className="text-slate-400">Cards:</span> <span className="text-white font-semibold">{cards.length}</span>
       </div>
     </div>
   );
