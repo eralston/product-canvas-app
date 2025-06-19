@@ -442,13 +442,6 @@ const Canvas: React.FC = () => {
               <Redo2 size={16} className="text-gray-600" />
             </button>
             <button 
-              onClick={handleNewPageButtonClick}
-              className="p-2 rounded hover:bg-gray-100 transition-colors"
-              title="New Page"
-            >
-              <FileText size={16} className="text-gray-600" />
-            </button>
-            <button 
               className="p-2 rounded hover:bg-gray-100 transition-colors"
               title="Export"
             >
@@ -459,6 +452,16 @@ const Canvas: React.FC = () => {
 
         {/* Right Section: Page Actions */}
         <div className="flex items-center gap-3">
+          {/* New Page Button - Secondary style with icon and text */}
+          <button 
+            onClick={handleNewPageButtonClick}
+            className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200"
+          >
+            <FileText size={16} />
+            New Page
+          </button>
+          
+          {/* New Card Button - Primary style */}
           <button 
             onClick={handleNewCardButtonClick}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
