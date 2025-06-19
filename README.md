@@ -73,4 +73,6 @@ The canvas will automatically adapt to your screen size, switching between scale
 # Background
 This app was created as my second vibe coded project with [Bolt](https://bolt.new/) and it ultimately arrived at quite an impressive array of working client-side interactions that even worked smoothly on mobile.
 
+As if this writing, you can try the app yourself using the [Netlify Sandbox Deployment](https://cheerful-sfogliatella-b069a6.netlify.app/).
+
 ![image](https://github.com/user-attachments/assets/c4015ef2-a364-47d3-89b8-bcf8951f562b)
