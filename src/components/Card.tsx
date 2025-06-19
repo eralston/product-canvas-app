@@ -188,7 +188,7 @@ const Card: React.FC<CardProps> = ({
         if (target.closest('.color-picker-container')) {
           return;
         }
-        exitEditMode(); // Use unified exit function - this saves content
+        exitEditMode(); // Use unified exit function
       }
     };
 
