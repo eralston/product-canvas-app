@@ -205,16 +205,16 @@ const Canvas: React.FC = () => {
         height: `${canvasHeight}px`,
         transform: `scale(${canvasScale})`,
         transformOrigin: 'center center',
-        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+        background: 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)',
       }}
       onDoubleClick={handleCanvasDoubleClick}
     >
       {/* Subtle grid pattern overlay */}
       <div 
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `
-            radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.15) 1px, transparent 0)
+            radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.15) 1px, transparent 0)
           `,
           backgroundSize: '20px 20px'
         }}
@@ -226,7 +226,7 @@ const Canvas: React.FC = () => {
           <div 
             className="absolute right-0 top-0 h-full w-px"
             style={{
-              background: 'linear-gradient(to bottom, transparent 0%, rgba(148, 163, 184, 0.4) 20%, rgba(148, 163, 184, 0.6) 50%, rgba(148, 163, 184, 0.4) 80%, transparent 100%)'
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(100, 116, 139, 0.4) 20%, rgba(100, 116, 139, 0.6) 50%, rgba(100, 116, 139, 0.4) 80%, transparent 100%)'
             }}
           />
         </div>
@@ -237,87 +237,115 @@ const Canvas: React.FC = () => {
           <div 
             className="absolute bottom-0 left-0 w-full h-px"
             style={{
-              background: 'linear-gradient(to right, transparent 0%, rgba(148, 163, 184, 0.4) 20%, rgba(148, 163, 184, 0.6) 50%, rgba(148, 163, 184, 0.4) 80%, transparent 100%)'
+              background: 'linear-gradient(to right, transparent 0%, rgba(100, 116, 139, 0.4) 20%, rgba(100, 116, 139, 0.6) 50%, rgba(100, 116, 139, 0.4) 80%, transparent 100%)'
             }}
           />
         </div>
         <div className="flex-1 quadrant-divider"></div>
       </div>
 
-      {/* Y-Axis Label (left side, rotated) */}
+      {/* Y-Axis Label (top of left side, rotated) */}
       <div 
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 -rotate-90 pointer-events-auto"
-        style={{ transformOrigin: 'center center' }}
+        className="absolute left-2 top-4 transform -rotate-90 pointer-events-auto"
+        style={{ transformOrigin: 'left top' }}
       >
         <EditableLabel
           initialValue={canvasLabels.yAxisLabel}
           onSave={handleYAxisLabelSave}
           characterLimit={20}
-          displayClassName="text-sm font-medium text-gray-700"
+          displayClassName="text-sm font-light text-white"
           inputClassName="text-sm"
           iconSize={12}
         />
       </div>
 
-      {/* X-Axis Label (bottom center) */}
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 pointer-events-auto">
+      {/* X-Axis Label (horizontal, above the line) */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 pointer-events-auto">
         <EditableLabel
           initialValue={canvasLabels.xAxisLabel}
           onSave={handleXAxisLabelSave}
           characterLimit={20}
-          displayClassName="text-sm font-medium text-gray-700"
+          displayClassName="text-sm font-light text-white"
           inputClassName="text-sm"
           iconSize={12}
         />
       </div>
 
-      {/* Quadrant Labels */}
+      {/* Quadrant Labels with darker background overlays */}
       {/* Top-Left Quadrant: Big Bets (High Impact, Low Ease) */}
-      <div className="absolute top-4 left-4 pointer-events-auto">
-        <EditableLabel
-          initialValue={canvasLabels.quadrantLabels.topLeft}
-          onSave={(newLabel) => handleQuadrantLabelSave('topLeft', newLabel)}
-          characterLimit={30}
-          displayClassName="text-xs font-semibold text-gray-600 bg-white/80 px-2 py-1 rounded-md shadow-sm"
-          inputClassName="text-xs"
-          iconSize={10}
-        />
+      <div 
+        className="absolute top-0 left-0 w-1/2 h-1/2 pointer-events-none"
+        style={{
+          background: 'linear-gradient(135deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+        }}
+      >
+        <div className="absolute top-4 left-4 pointer-events-auto">
+          <EditableLabel
+            initialValue={canvasLabels.quadrantLabels.topLeft}
+            onSave={(newLabel) => handleQuadrantLabelSave('topLeft', newLabel)}
+            characterLimit={30}
+            displayClassName="text-sm font-medium text-white"
+            inputClassName="text-sm"
+            iconSize={10}
+          />
+        </div>
       </div>
 
       {/* Top-Right Quadrant: Quick Wins (High Impact, High Ease) */}
-      <div className="absolute top-4 right-4 pointer-events-auto">
-        <EditableLabel
-          initialValue={canvasLabels.quadrantLabels.topRight}
-          onSave={(newLabel) => handleQuadrantLabelSave('topRight', newLabel)}
-          characterLimit={30}
-          displayClassName="text-xs font-semibold text-gray-600 bg-white/80 px-2 py-1 rounded-md shadow-sm"
-          inputClassName="text-xs"
-          iconSize={10}
-        />
+      <div 
+        className="absolute top-0 right-0 w-1/2 h-1/2 pointer-events-none"
+        style={{
+          background: 'linear-gradient(225deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+        }}
+      >
+        <div className="absolute top-4 right-4 pointer-events-auto">
+          <EditableLabel
+            initialValue={canvasLabels.quadrantLabels.topRight}
+            onSave={(newLabel) => handleQuadrantLabelSave('topRight', newLabel)}
+            characterLimit={30}
+            displayClassName="text-sm font-medium text-white"
+            inputClassName="text-sm"
+            iconSize={10}
+          />
+        </div>
       </div>
 
       {/* Bottom-Left Quadrant: Money Pit (Low Impact, Low Ease) */}
-      <div className="absolute bottom-8 left-4 pointer-events-auto">
-        <EditableLabel
-          initialValue={canvasLabels.quadrantLabels.bottomLeft}
-          onSave={(newLabel) => handleQuadrantLabelSave('bottomLeft', newLabel)}
-          characterLimit={30}
-          displayClassName="text-xs font-semibold text-gray-600 bg-white/80 px-2 py-1 rounded-md shadow-sm"
-          inputClassName="text-xs"
-          iconSize={10}
-        />
+      <div 
+        className="absolute bottom-0 left-0 w-1/2 h-1/2 pointer-events-none"
+        style={{
+          background: 'linear-gradient(45deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+        }}
+      >
+        <div className="absolute bottom-8 left-4 pointer-events-auto">
+          <EditableLabel
+            initialValue={canvasLabels.quadrantLabels.bottomLeft}
+            onSave={(newLabel) => handleQuadrantLabelSave('bottomLeft', newLabel)}
+            characterLimit={30}
+            displayClassName="text-sm font-medium text-white"
+            inputClassName="text-sm"
+            iconSize={10}
+          />
+        </div>
       </div>
 
       {/* Bottom-Right Quadrant: Fill-Ins (Low Impact, High Ease) */}
-      <div className="absolute bottom-8 right-4 pointer-events-auto">
-        <EditableLabel
-          initialValue={canvasLabels.quadrantLabels.bottomRight}
-          onSave={(newLabel) => handleQuadrantLabelSave('bottomRight', newLabel)}
-          characterLimit={30}
-          displayClassName="text-xs font-semibold text-gray-600 bg-white/80 px-2 py-1 rounded-md shadow-sm"
-          inputClassName="text-xs"
-          iconSize={10}
-        />
+      <div 
+        className="absolute bottom-0 right-0 w-1/2 h-1/2 pointer-events-none"
+        style={{
+          background: 'linear-gradient(315deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+        }}
+      >
+        <div className="absolute bottom-8 right-4 pointer-events-auto">
+          <EditableLabel
+            initialValue={canvasLabels.quadrantLabels.bottomRight}
+            onSave={(newLabel) => handleQuadrantLabelSave('bottomRight', newLabel)}
+            characterLimit={30}
+            displayClassName="text-sm font-medium text-white"
+            inputClassName="text-sm"
+            iconSize={10}
+          />
+        </div>
       </div>
       
       {/* Cards */}
