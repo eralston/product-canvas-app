@@ -116,7 +116,9 @@ const Card: React.FC<CardProps> = ({
     onEditModeChange?.(true);
   };
 
-  const saveContent = () => {
+  // Unified function to exit edit mode and always save content
+  const exitEditMode = () => {
+    // Always save the current edit content
     onContentChange(id, editContent);
     setIsEditing(false);
     onEditModeChange?.(false);
@@ -139,7 +141,7 @@ const Card: React.FC<CardProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      saveContent();
+      exitEditMode(); // Use unified exit function
     } else if (e.key === 'Escape') {
       e.preventDefault();
       cancelEdit();
@@ -172,7 +174,7 @@ const Card: React.FC<CardProps> = ({
         if (target.closest('.color-picker-container')) {
           return;
         }
-        saveContent();
+        exitEditMode(); // Use unified exit function
       }
     };
 
@@ -304,7 +306,7 @@ const Card: React.FC<CardProps> = ({
             cardHeight={cardSize.height}
             currentColorId={colorId}
             onSelectColor={handleColorChange}
-            onClose={() => setIsEditing(false)}
+            onClose={exitEditMode} // Use unified exit function
             scale={scale}
             hasContent={content.trim().length > 0}
           />
