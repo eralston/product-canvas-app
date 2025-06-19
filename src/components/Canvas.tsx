@@ -421,91 +421,30 @@ const Canvas: React.FC = () => {
   return (
     <div className="w-full h-screen flex flex-col bg-gray-50">
       {/* Responsive Header with App Identity, Document Context, and Page Actions */}
-      <div className="fixed top-0 left-0 right-0 z-30 bg-white border-b shadow-sm">
-        {/* Main header row */}
-        <div className="h-16 flex items-center justify-between px-3 md:px-6">
-          {/* Left Section: App Identity */}
-          <div className="flex items-center gap-2 md:gap-3">
-            <LayoutGrid size={24} className="text-blue-600 md:w-7 md:h-7" />
-            <span className="hidden md:block font-open-sans font-extrabold text-2xl md:text-3xl text-gray-800 tracking-tight">
-              Quadrant
-            </span>
-          </div>
-
-          {/* Middle Section: Document Context - Responsive layout */}
-          <div className="flex items-center gap-2 md:gap-6 flex-1 justify-center max-w-2xl">
-            {/* Document Title - Smaller on mobile */}
-            <div className="flex-shrink min-w-0">
-              <EditableLabel
-                initialValue={canvasLabels.documentTitle}
-                onSave={handleDocumentTitleSave}
-                characterLimit={60}
-                displayClassName="text-sm md:text-lg font-semibold text-gray-800 truncate"
-                inputClassName="text-sm md:text-lg font-semibold"
-              />
-            </div>
-            
-            {/* New Page Button - Icon only on mobile */}
-            <button 
-              onClick={handleNewPageButtonClick}
-              className="flex items-center gap-2 px-2 md:px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200 flex-shrink-0"
-            >
-              <FileText size={16} />
-              <span className="hidden md:inline">New Page</span>
-            </button>
-
-            {/* Document Actions - Smaller on mobile */}
-            <div className="hidden sm:flex items-center gap-1 flex-shrink-0">
-              <button 
-                className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
-                title="Undo"
-              >
-                <Undo2 size={14} className="text-gray-600 md:w-4 md:h-4" />
-              </button>
-              <button 
-                className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
-                title="Redo"
-              >
-                <Redo2 size={14} className="text-gray-600 md:w-4 md:h-4" />
-              </button>
-              <button 
-                className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
-                title="Export"
-              >
-                <Download size={14} className="text-gray-600 md:w-4 md:h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Right Section: Page Actions */}
-          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-            {/* New Card Button - Icon only on mobile */}
-            <button 
-              onClick={handleNewCardButtonClick}
-              className="flex items-center gap-2 px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              <Plus size={16} />
-              <span className="hidden md:inline">New Card</span>
-            </button>
-          </div>
+      <div className="fixed top-0 left-0 right-0 z-30 h-24 md:h-16 bg-white border-b shadow-sm flex items-center justify-between px-3 md:px-6">
+        {/* Left Section: App Identity */}
+        <div className="flex items-center gap-2 md:gap-3">
+          <LayoutGrid size={24} className="text-blue-600 md:w-7 md:h-7" />
+          <span className="hidden md:block font-open-sans font-extrabold text-2xl md:text-3xl text-gray-800 tracking-tight">
+            Quadrant
+          </span>
         </div>
 
-        {/* Mobile-only second row for page navigation */}
-        <div className="sm:hidden h-8 flex items-center justify-center border-t border-gray-100 bg-gray-50">
-          <div className="flex items-center gap-3 text-gray-600">
-            <button className="p-1 rounded hover:bg-gray-200 transition-colors">
-              <ChevronLeft size={16} />
-            </button>
-            <span className="text-xs font-medium px-2 whitespace-nowrap">Page 1 of 3</span>
-            <button className="p-1 rounded hover:bg-gray-200 transition-colors">
-              <ChevronRight size={16} />
-            </button>
+        {/* Middle Section: Document Context - Responsive layout */}
+        <div className="flex items-center gap-2 md:gap-6 flex-1 justify-center max-w-2xl">
+          {/* Document Title - Smaller on mobile */}
+          <div className="flex-shrink min-w-0">
+            <EditableLabel
+              initialValue={canvasLabels.documentTitle}
+              onSave={handleDocumentTitleSave}
+              characterLimit={60}
+              displayClassName="text-sm md:text-lg font-semibold text-gray-800 truncate"
+              inputClassName="text-sm md:text-lg font-semibold"
+            />
           </div>
-        </div>
-
-        {/* Desktop page navigation - shown in main header */}
-        <div className="hidden sm:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="flex items-center gap-2 text-gray-600">
+          
+          {/* Page Navigation - Hidden on small screens */}
+          <div className="hidden sm:flex items-center gap-2 text-gray-600 flex-shrink-0">
             <button className="p-1 rounded hover:bg-gray-100 transition-colors">
               <ChevronLeft size={16} />
             </button>
@@ -514,14 +453,57 @@ const Canvas: React.FC = () => {
               <ChevronRight size={16} />
             </button>
           </div>
+
+          {/* New Page Button - Icon only on mobile */}
+          <button 
+            onClick={handleNewPageButtonClick}
+            className="flex items-center gap-2 px-2 md:px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200 flex-shrink-0"
+          >
+            <FileText size={16} />
+            <span className="hidden md:inline">New Page</span>
+          </button>
+
+          {/* Document Actions - Smaller on mobile */}
+          <div className="hidden sm:flex items-center gap-1 flex-shrink-0">
+            <button 
+              className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
+              title="Undo"
+            >
+              <Undo2 size={14} className="text-gray-600 md:w-4 md:h-4" />
+            </button>
+            <button 
+              className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
+              title="Redo"
+            >
+              <Redo2 size={14} className="text-gray-600 md:w-4 md:h-4" />
+            </button>
+            <button 
+              className="p-1.5 md:p-2 rounded hover:bg-gray-100 transition-colors"
+              title="Export"
+            >
+              <Download size={14} className="text-gray-600 md:w-4 md:h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Right Section: Page Actions */}
+        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+          {/* New Card Button - Icon only on mobile */}
+          <button 
+            onClick={handleNewCardButtonClick}
+            className="flex items-center gap-2 px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            <Plus size={16} />
+            <span className="hidden md:inline">New Card</span>
+          </button>
         </div>
       </div>
       
       {/* Canvas Container - with responsive top padding to account for fixed header */}
-      <div className="pt-16 sm:pt-16"> {/* Responsive padding: 16 for mobile (with extra row), 16 for desktop */}
+      <div className="pt-24 md:pt-16"> {/* Responsive padding to account for fixed header */}
         {viewportMode === 'fixed' ? (
           // Fixed mode: Canvas scales to fit viewport while maintaining 16:9, centered
-          <div className="h-screen flex items-center justify-center p-2 md:p-4" style={{ height: 'calc(100vh - 4rem)' }}>
+          <div className="h-screen flex items-center justify-center p-2 md:p-4" style={{ height: 'calc(100vh - 6rem)' }}>
             <div className="flex items-center justify-center w-full h-full">
               {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
             </div>
@@ -531,7 +513,7 @@ const Canvas: React.FC = () => {
           <div 
             className="overflow-auto bg-gray-100"
             style={{
-              height: 'calc(100vh - 4rem)', // Full viewport minus header (responsive)
+              height: 'calc(100vh - 6rem)', // Full viewport minus header (responsive)
               minWidth: '100%'
             }}
           >
