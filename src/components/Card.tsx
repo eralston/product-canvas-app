@@ -151,20 +151,6 @@ const Card: React.FC<CardProps> = ({
 
   const handleColorChange = (newColorId: string) => {
     onColorChange(id, newColorId);
-    // Don't exit edit mode - just change the color and keep editing
-    // The color picker will handle closing itself based on hasContent prop
-  };
-
-  const handleColorPickerClose = () => {
-    // Only exit edit mode if the card has content
-    // For empty cards, keep editing so user can add content
-    if (content.trim().length > 0 || editContent.trim().length > 0) {
-      exitEditMode();
-    }
-    // If no content, stay in edit mode but refocus the textarea
-    else if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
   };
 
   useEffect(() => {
@@ -320,9 +306,9 @@ const Card: React.FC<CardProps> = ({
             cardHeight={cardSize.height}
             currentColorId={colorId}
             onSelectColor={handleColorChange}
-            onClose={handleColorPickerClose}
+            onClose={exitEditMode} // Use unified exit function
             scale={scale}
-            hasContent={content.trim().length > 0 || editContent.trim().length > 0}
+            hasContent={content.trim().length > 0}
           />
         </div>
       )}
