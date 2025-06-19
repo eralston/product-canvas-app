@@ -227,9 +227,9 @@ const Card: React.FC<CardProps> = ({
   const currentCharCount = editContent.length;
   const remainingChars = CHARACTER_LIMIT - currentCharCount;
 
-  // Build dynamic CSS classes based on color palette with enhanced borders
+  // Build dynamic CSS classes based on color palette
   const cardClasses = `
-    absolute rounded-lg select-none transition-all duration-200 ease-out border-3
+    absolute rounded-lg select-none transition-all duration-200 ease-out border-2
     ${colorPalette.background}
     ${isEditing 
       ? `${colorPalette.editingBorder} cursor-text` 
@@ -239,12 +239,12 @@ const Card: React.FC<CardProps> = ({
     }
   `;
 
-  // Enhanced shadows for more pronounced depth
+  // Build dynamic shadow based on color palette
   const cardShadow = isEditing
-    ? '0 0 0 3px rgba(59, 130, 246, 0.4), 0 12px 32px -8px rgba(0, 0, 0, 0.2)'
+    ? '0 0 0 2px rgba(59, 130, 246, 0.3), 0 8px 25px -5px rgba(0, 0, 0, 0.15)'
     : isDragging 
-      ? `0 32px 64px -16px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 12px 24px -6px ${colorPalette.shadowSecondary}`
-      : `0 6px 12px -2px rgba(0, 0, 0, 0.15), 0 4px 8px -2px rgba(0, 0, 0, 0.1), 0 2px 4px 0 ${colorPalette.shadowPrimary}`;
+      ? `0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05), 0 8px 16px -4px ${colorPalette.shadowSecondary}`
+      : `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px 0 ${colorPalette.shadowPrimary}`;
 
   return (
     <>
@@ -258,7 +258,7 @@ const Card: React.FC<CardProps> = ({
           height: `${cardSize.height}px`,
           zIndex: zIndex,
           boxShadow: cardShadow,
-          transform: isDragging ? 'translateY(-3px)' : 'translateY(0px)'
+          transform: isDragging ? 'translateY(-2px)' : 'translateY(0px)'
         }}
         onMouseDown={handleMouseDown}
         onDoubleClick={handleDoubleClick}
@@ -271,7 +271,7 @@ const Card: React.FC<CardProps> = ({
                 value={editContent}
                 onChange={handleContentChange}
                 onKeyDown={handleKeyDown}
-                className={`w-full h-full resize-none bg-transparent text-xs font-semibold text-center leading-tight border-none outline-none ${colorPalette.text} ${colorPalette.placeholder}`}
+                className={`w-full h-full resize-none bg-transparent text-xs font-medium text-center leading-tight border-none outline-none ${colorPalette.text} ${colorPalette.placeholder}`}
                 style={{ 
                   minHeight: '100%',
                   fontFamily: 'inherit'
@@ -279,7 +279,7 @@ const Card: React.FC<CardProps> = ({
                 placeholder="Type your note..."
               />
             ) : (
-              <p className={`text-xs font-semibold text-center leading-tight whitespace-pre-wrap ${colorPalette.text}`}>
+              <p className={`text-xs font-medium text-center leading-tight whitespace-pre-wrap ${colorPalette.text}`}>
                 {content || 'Double-click to edit'}
               </p>
             )}
@@ -288,7 +288,7 @@ const Card: React.FC<CardProps> = ({
           {/* Character counter - show current/limit format when editing and getting close to limit */}
           {isEditing && remainingChars <= 20 && (
             <div className="text-center mt-1">
-              <span className={`text-xs font-bold ${remainingChars <= 10 ? colorPalette.charCounterWarning : colorPalette.charCounterNormal}`}>
+              <span className={`text-xs font-medium ${remainingChars <= 10 ? colorPalette.charCounterWarning : colorPalette.charCounterNormal}`}>
                 {currentCharCount}/{CHARACTER_LIMIT}
               </span>
             </div>
