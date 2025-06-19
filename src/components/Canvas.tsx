@@ -152,7 +152,7 @@ const Canvas: React.FC = () => {
 
   const renderCanvas = (canvasWidth: number, canvasHeight: number) => (
     <div 
-      className="bg-white border border-gray-200 rounded-lg shadow-sm relative overflow-hidden canvas-area"
+      className="bg-neutral-50 border-2 border-gray-300 rounded-lg shadow-md relative overflow-hidden canvas-area"
       style={{
         width: `${canvasWidth}px`,
         height: `${canvasHeight}px`,
@@ -163,11 +163,11 @@ const Canvas: React.FC = () => {
     >
       {/* Quadrant dividers */}
       <div className="absolute inset-0 flex pointer-events-none">
-        <div className="flex-1 border-r border-gray-300 quadrant-divider"></div>
+        <div className="flex-1 border-r-2 border-gray-400 border-dashed quadrant-divider"></div>
         <div className="flex-1 quadrant-divider"></div>
       </div>
       <div className="absolute inset-0 flex flex-col pointer-events-none">
-        <div className="flex-1 border-b border-gray-300 quadrant-divider"></div>
+        <div className="flex-1 border-b-2 border-gray-400 border-dashed quadrant-divider"></div>
         <div className="flex-1 quadrant-divider"></div>
       </div>
       
@@ -200,11 +200,11 @@ const Canvas: React.FC = () => {
   );
 
   return (
-    <div className="w-full h-screen flex flex-col bg-gray-50">
+    <div className="w-full h-screen flex flex-col bg-neutral-100">
       {/* Document Title */}
-      <div className="p-4 bg-white border-b flex-shrink-0">
-        <h1 className="text-xl font-semibold text-gray-800">Interactive Canvas</h1>
-        <p className="text-sm text-gray-600 mt-1">
+      <div className="p-4 bg-white border-b-2 border-gray-300 shadow-md flex-shrink-0">
+        <h1 className="text-xl font-bold text-gray-900">Interactive Canvas</h1>
+        <p className="text-sm text-gray-700 mt-1 font-medium">
           Drag cards around, double-click to edit and change colors, or double-click empty space to create new cards
         </p>
       </div>
@@ -219,7 +219,7 @@ const Canvas: React.FC = () => {
         ) : (
           // Scrollable mode: Canvas at 100% scale with scrolling
           <div 
-            className="overflow-auto w-full h-full border border-gray-300 rounded-lg bg-gray-100"
+            className="overflow-auto w-full h-full border-2 border-gray-400 rounded-lg bg-neutral-200 shadow-inner"
             style={{
               minWidth: '100%',
               minHeight: '100%'
@@ -239,7 +239,7 @@ const Canvas: React.FC = () => {
       </div>
       
       {/* Debug info - we can remove this later */}
-      <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0">
+      <div className="p-2 bg-gray-200 border-t border-gray-300 text-xs text-gray-700 font-medium flex-shrink-0">
         Mode: {viewportMode} | Scale: {Math.round(canvasScale * 100)}% | Canvas: {MIN_CANVAS_WIDTH}x{MIN_CANVAS_HEIGHT}px | Cards: {cards.length}
       </div>
     </div>
