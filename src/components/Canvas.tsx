@@ -391,33 +391,33 @@ const Canvas: React.FC = () => {
       </div>
       
       {/* Canvas Container */}
-      <div className="flex-1 flex items-center justify-center p-4 min-h-0">
-        {viewportMode === 'fixed' ? (
-          // Fixed mode: Canvas scales to fit viewport while maintaining 16:9, centered
+      {viewportMode === 'fixed' ? (
+        // Fixed mode: Canvas scales to fit viewport while maintaining 16:9, centered
+        <div className="flex-1 flex items-center justify-center p-4 min-h-0">
           <div className="flex items-center justify-center w-full h-full">
             {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
           </div>
-        ) : (
-          // Scrollable mode: Canvas at 100% scale with scrolling
-          <div 
-            className="overflow-auto w-full h-full border border-gray-300 rounded-lg bg-gray-100"
+        </div>
+      ) : (
+        // Scrollable mode: Canvas at 100% scale with scrolling, using full available space
+        <div 
+          className="flex-1 overflow-auto bg-gray-100 min-h-0"
+          style={{
+            minWidth: '100%',
+            minHeight: '100%'
+          }}
+        >
+          {/* Canvas positioned with margin for visual breathing room */}
+          <div
             style={{
-              minWidth: '100%',
-              minHeight: '100%'
+              margin: '16px', // Comfortable margin for scrollable mode
+              display: 'inline-block' // Prevent margin collapse
             }}
           >
-            {/* Canvas positioned with margin for visual breathing room */}
-            <div
-              style={{
-                margin: '16px', // Comfortable margin for scrollable mode
-                display: 'inline-block' // Prevent margin collapse
-              }}
-            >
-              {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
-            </div>
+            {renderCanvas(MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT)}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       
       {/* Debug info - we can remove this later */}
       <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0 font-open-sans font-light">
