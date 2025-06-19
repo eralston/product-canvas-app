@@ -206,16 +206,16 @@ const Canvas: React.FC = () => {
         height: `${canvasHeight}px`,
         transform: `scale(${canvasScale})`,
         transformOrigin: 'center center',
-        background: 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)',
+        background: 'linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%)',
       }}
       onDoubleClick={handleCanvasDoubleClick}
     >
       {/* Subtle grid pattern overlay */}
       <div 
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-15"
         style={{
           backgroundImage: `
-            radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.15) 1px, transparent 0)
+            radial-gradient(circle at 1px 1px, rgba(156, 163, 175, 0.2) 1px, transparent 0)
           `,
           backgroundSize: '20px 20px'
         }}
@@ -227,7 +227,7 @@ const Canvas: React.FC = () => {
           <div 
             className="absolute right-0 top-0 h-full w-px"
             style={{
-              background: 'linear-gradient(to bottom, transparent 0%, rgba(100, 116, 139, 0.4) 20%, rgba(100, 116, 139, 0.6) 50%, rgba(100, 116, 139, 0.4) 80%, transparent 100%)'
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(75, 85, 99, 0.5) 20%, rgba(75, 85, 99, 0.7) 50%, rgba(75, 85, 99, 0.5) 80%, transparent 100%)'
             }}
           />
         </div>
@@ -238,7 +238,7 @@ const Canvas: React.FC = () => {
           <div 
             className="absolute bottom-0 left-0 w-full h-px"
             style={{
-              background: 'linear-gradient(to right, transparent 0%, rgba(100, 116, 139, 0.4) 20%, rgba(100, 116, 139, 0.6) 50%, rgba(100, 116, 139, 0.4) 80%, transparent 100%)'
+              background: 'linear-gradient(to right, transparent 0%, rgba(75, 85, 99, 0.5) 20%, rgba(75, 85, 99, 0.7) 50%, rgba(75, 85, 99, 0.5) 80%, transparent 100%)'
             }}
           />
         </div>
@@ -251,7 +251,7 @@ const Canvas: React.FC = () => {
           initialValue={canvasLabels.yAxisLabel}
           onSave={handleYAxisLabelSave}
           characterLimit={20}
-          displayClassName="text-sm font-light text-white"
+          displayClassName="text-sm font-light text-gray-700"
           inputClassName="text-sm"
           iconSize={12}
         />
@@ -263,18 +263,18 @@ const Canvas: React.FC = () => {
           initialValue={canvasLabels.xAxisLabel}
           onSave={handleXAxisLabelSave}
           characterLimit={20}
-          displayClassName="text-sm font-light text-white"
+          displayClassName="text-sm font-light text-gray-700"
           inputClassName="text-sm"
           iconSize={12}
         />
       </div>
 
-      {/* Quadrant Labels with darker background overlays */}
+      {/* Quadrant Labels with subtle background overlays */}
       {/* Top-Left Quadrant: Quick Wins (High Impact, Low Effort) */}
       <div 
         className="absolute top-0 left-0 w-1/2 h-1/2 pointer-events-none"
         style={{
-          background: 'linear-gradient(135deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+          background: 'linear-gradient(135deg, rgba(156, 163, 175, 0.08) 0%, rgba(107, 114, 128, 0.05) 100%)'
         }}
       >
         <div className="absolute top-4 left-4 pointer-events-auto">
@@ -282,7 +282,7 @@ const Canvas: React.FC = () => {
             initialValue={canvasLabels.quadrantLabels.topLeft}
             onSave={(newLabel) => handleQuadrantLabelSave('topLeft', newLabel)}
             characterLimit={30}
-            displayClassName="text-sm font-medium text-white"
+            displayClassName="text-sm font-medium text-gray-700"
             inputClassName="text-sm"
             iconSize={10}
           />
@@ -293,7 +293,7 @@ const Canvas: React.FC = () => {
       <div 
         className="absolute top-0 right-0 w-1/2 h-1/2 pointer-events-none"
         style={{
-          background: 'linear-gradient(225deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+          background: 'linear-gradient(225deg, rgba(156, 163, 175, 0.08) 0%, rgba(107, 114, 128, 0.05) 100%)'
         }}
       >
         <div className="absolute top-4 right-4 pointer-events-auto">
@@ -301,7 +301,7 @@ const Canvas: React.FC = () => {
             initialValue={canvasLabels.quadrantLabels.topRight}
             onSave={(newLabel) => handleQuadrantLabelSave('topRight', newLabel)}
             characterLimit={30}
-            displayClassName="text-sm font-medium text-white"
+            displayClassName="text-sm font-medium text-gray-700"
             inputClassName="text-sm"
             iconSize={10}
           />
@@ -312,7 +312,7 @@ const Canvas: React.FC = () => {
       <div 
         className="absolute bottom-0 left-0 w-1/2 h-1/2 pointer-events-none"
         style={{
-          background: 'linear-gradient(45deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+          background: 'linear-gradient(45deg, rgba(156, 163, 175, 0.08) 0%, rgba(107, 114, 128, 0.05) 100%)'
         }}
       >
         <div className="absolute bottom-8 left-4 pointer-events-auto">
@@ -320,7 +320,7 @@ const Canvas: React.FC = () => {
             initialValue={canvasLabels.quadrantLabels.bottomLeft}
             onSave={(newLabel) => handleQuadrantLabelSave('bottomLeft', newLabel)}
             characterLimit={30}
-            displayClassName="text-sm font-medium text-white"
+            displayClassName="text-sm font-medium text-gray-700"
             inputClassName="text-sm"
             iconSize={10}
           />
@@ -331,7 +331,7 @@ const Canvas: React.FC = () => {
       <div 
         className="absolute bottom-0 right-0 w-1/2 h-1/2 pointer-events-none"
         style={{
-          background: 'linear-gradient(315deg, rgba(71, 85, 105, 0.15) 0%, rgba(51, 65, 85, 0.1) 100%)'
+          background: 'linear-gradient(315deg, rgba(156, 163, 175, 0.08) 0%, rgba(107, 114, 128, 0.05) 100%)'
         }}
       >
         <div className="absolute bottom-8 right-4 pointer-events-auto">
@@ -339,7 +339,7 @@ const Canvas: React.FC = () => {
             initialValue={canvasLabels.quadrantLabels.bottomRight}
             onSave={(newLabel) => handleQuadrantLabelSave('bottomRight', newLabel)}
             characterLimit={30}
-            displayClassName="text-sm font-medium text-white"
+            displayClassName="text-sm font-medium text-gray-700"
             inputClassName="text-sm"
             iconSize={10}
           />
