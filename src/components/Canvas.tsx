@@ -427,6 +427,15 @@ const Canvas: React.FC = () => {
             </button>
           </div>
 
+          {/* New Page Button - Secondary style with icon and text */}
+          <button 
+            onClick={handleNewPageButtonClick}
+            className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200"
+          >
+            <FileText size={16} />
+            New Page
+          </button>
+
           {/* Document Actions */}
           <div className="flex items-center gap-1">
             <button 
@@ -452,15 +461,6 @@ const Canvas: React.FC = () => {
 
         {/* Right Section: Page Actions */}
         <div className="flex items-center gap-3">
-          {/* New Page Button - Secondary style with icon and text */}
-          <button 
-            onClick={handleNewPageButtonClick}
-            className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border border-gray-200"
-          >
-            <FileText size={16} />
-            New Page
-          </button>
-          
           {/* New Card Button - Primary style */}
           <button 
             onClick={handleNewCardButtonClick}
