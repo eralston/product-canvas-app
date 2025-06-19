@@ -44,6 +44,13 @@ const Card: React.FC<CardProps> = ({
   const [isEditing, setIsEditing] = useState(startInEditMode);
   const [editContent, setEditContent] = useState(content);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [hasMoved, setHasMoved] = useState(false);
+  
+  // Touch handling state
+  const [lastTouchTime, setLastTouchTime] = useState(0);
+  const [touchStartTime, setTouchStartTime] = useState(0);
+  const [touchStartPos, setTouchStartPos] = useState({ x: 0, y: 0 });
+  
   const cardRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -52,6 +59,11 @@ const Card: React.FC<CardProps> = ({
   const MIN_CARD_HEIGHT = 72;
   const MAX_CARD_WIDTH = 164;
   const MAX_CARD_HEIGHT = 124;
+
+  // Touch constants
+  const DOUBLE_TAP_DELAY = 300; // ms
+  const DRAG_THRESHOLD = 5; // pixels
+  const LONG_PRESS_DELAY = 150; // ms
 
   // Get color palette for this card
   const colorPalette = getColorPaletteById(colorId);
@@ -100,7 +112,79 @@ const Card: React.FC<CardProps> = ({
     return { clientX: 0, clientY: 0 };
   };
 
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isEditing) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const now = Date.now();
+    const touch = e.touches[0];
+    
+    setTouchStartTime(now);
+    setTouchStartPos({ x: touch.clientX, y: touch.clientY });
+    setHasMoved(false);
+    
+    // Check for double tap
+    if (now - lastTouchTime < DOUBLE_TAP_DELAY) {
+      // Double tap detected - enter edit mode
+      setIsEditing(true);
+      setEditContent(content);
+      onZIndexChange(id);
+      onEditModeChange?.(true);
+      setLastTouchTime(0); // Reset to prevent triple tap
+      return;
+    }
+    
+    setLastTouchTime(now);
+    
+    // Start drag preparation
+    onZIndexChange(id);
+    
+    const canvas = cardRef.current?.parentElement;
+    if (!canvas) return;
+    
+    const canvasRect = canvas.getBoundingClientRect();
+    
+    setDragOffset({
+      x: (touch.clientX - canvasRect.left) / scale - position.x,
+      y: (touch.clientY - canvasRect.top) / scale - position.y
+    });
+    
+    // Set up drag after a short delay to distinguish from tap
+    setTimeout(() => {
+      if (!hasMoved && touchStartTime === now) {
+        setIsDragging(true);
+      }
+    }, LONG_PRESS_DELAY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isEditing) return;
+    
+    const touch = e.touches[0];
+    const moveDistance = Math.sqrt(
+      Math.pow(touch.clientX - touchStartPos.x, 2) + 
+      Math.pow(touch.clientY - touchStartPos.y, 2)
+    );
+    
+    if (moveDistance > DRAG_THRESHOLD) {
+      setHasMoved(true);
+      if (!isDragging) {
+        setIsDragging(true);
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (isEditing) return;
+    
+    e.preventDefault();
+    setIsDragging(false);
+    setHasMoved(false);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
     if (isEditing) return; // Don't drag while editing
     
     e.preventDefault();
@@ -112,12 +196,11 @@ const Card: React.FC<CardProps> = ({
     if (!canvas) return;
     
     const canvasRect = canvas.getBoundingClientRect();
-    const coords = getEventCoordinates(e.nativeEvent);
     
     // Account for canvas scaling when calculating drag offset
     setDragOffset({
-      x: (coords.clientX - canvasRect.left) / scale - position.x,
-      y: (coords.clientY - canvasRect.top) / scale - position.y
+      x: (e.clientX - canvasRect.left) / scale - position.x,
+      y: (e.clientY - canvasRect.top) / scale - position.y
     });
   };
 
@@ -288,8 +371,10 @@ const Card: React.FC<CardProps> = ({
           transform: isDragging ? 'translateY(-2px)' : 'translateY(0px)',
           touchAction: 'none' // Prevent default touch behaviors
         }}
-        onMouseDown={handleDragStart}
-        onTouchStart={handleDragStart}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         onDoubleClick={handleDoubleClick}
       >
         <div className="p-2 h-full flex flex-col">
