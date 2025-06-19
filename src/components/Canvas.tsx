@@ -54,6 +54,12 @@ const Canvas: React.FC = () => {
   };
 
   const handleCardContentChange = (cardId: string, newContent: string) => {
+    // If content is empty (trimmed), remove the card
+    if (newContent.trim() === '') {
+      handleCardDelete(cardId);
+      return;
+    }
+
     setCards(prevCards => 
       prevCards.map(card => 
         card.id === cardId 
@@ -71,6 +77,24 @@ const Canvas: React.FC = () => {
           : card
       )
     );
+  };
+
+  // New function to handle card deletion
+  const handleCardDelete = (cardId: string) => {
+    // Remove card from cards array
+    setCards(prevCards => prevCards.filter(card => card.id !== cardId));
+    
+    // Remove card's z-index
+    setCardZIndices(prev => {
+      const newIndices = { ...prev };
+      delete newIndices[cardId];
+      return newIndices;
+    });
+
+    // Clear editing state if this card was being edited
+    if (editingCardId === cardId) {
+      setEditingCardId(null);
+    }
   };
 
   // New function to handle card position updates
@@ -379,6 +403,7 @@ const Canvas: React.FC = () => {
           onContentChange={handleCardContentChange}
           onPositionChange={handleCardPositionChange}
           onColorChange={handleCardColorChange}
+          onDelete={handleCardDelete}
           zIndex={cardZIndices[card.id] || 1}
           colorId={card.colorId}
           startInEditMode={editingCardId === card.id}

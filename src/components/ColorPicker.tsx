@@ -1,5 +1,6 @@
 import React from 'react';
 import { cardColorPalettes, CardColorPalette } from '../utils/cardColors';
+import { Trash2 } from 'lucide-react';
 
 interface ColorPickerProps {
   x: number;
@@ -8,6 +9,7 @@ interface ColorPickerProps {
   cardHeight: number;
   currentColorId: string;
   onSelectColor: (colorId: string) => void;
+  onDelete: () => void;
   onClose: () => void;
   scale: number;
   hasContent: boolean; // New prop to determine behavior
@@ -20,13 +22,14 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   cardHeight,
   currentColorId,
   onSelectColor,
+  onDelete,
   onClose,
   scale,
   hasContent
 }) => {
   // Calculate position to appear to the right of the card, or left if not enough space
-  const pickerWidth = 32; // Much smaller width for vertical layout
-  const pickerHeight = cardColorPalettes.length * 20 + 16; // Height based on number of colors
+  const pickerWidth = 32; // Width for vertical layout
+  const pickerHeight = cardColorPalettes.length * 20 + 40 + 16; // Height based on colors + delete button + padding
   const spacing = 8;
   
   // Position to the right of the card by default
@@ -56,6 +59,11 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     }
   };
 
+  const handleDeleteClick = () => {
+    onDelete();
+    // No need to call onClose since the card will be deleted
+  };
+
   return (
     <>
       {/* Backdrop to close picker when clicking outside */}
@@ -77,6 +85,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col gap-1">
+          {/* Color options */}
           {cardColorPalettes.map((palette) => (
             <button
               key={palette.id}
@@ -92,6 +101,18 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
               title={palette.name}
             />
           ))}
+          
+          {/* Separator */}
+          <div className="h-px bg-gray-200 my-1" />
+          
+          {/* Delete button */}
+          <button
+            onClick={handleDeleteClick}
+            className="flex items-center justify-center w-full h-6 rounded hover:bg-red-50 transition-colors group"
+            title="Delete card"
+          >
+            <Trash2 size={12} className="text-gray-400 group-hover:text-red-500 transition-colors" />
+          </button>
         </div>
       </div>
     </>

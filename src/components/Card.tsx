@@ -13,6 +13,7 @@ interface CardProps {
   onContentChange: (id: string, newContent: string) => void;
   onPositionChange: (id: string, x: number, y: number) => void;
   onColorChange: (id: string, colorId: string) => void;
+  onDelete: (id: string) => void;
   zIndex: number;
   colorId: string;
   startInEditMode?: boolean;
@@ -31,6 +32,7 @@ const Card: React.FC<CardProps> = ({
   onContentChange,
   onPositionChange,
   onColorChange,
+  onDelete,
   zIndex,
   colorId,
   startInEditMode = false,
@@ -116,9 +118,9 @@ const Card: React.FC<CardProps> = ({
     onEditModeChange?.(true);
   };
 
-  // Unified function to exit edit mode and always save content
+  // Unified function to exit edit mode and save content
   const exitEditMode = () => {
-    // Always save the current edit content
+    // Always save the current edit content (this will trigger deletion if empty)
     onContentChange(id, editContent);
     setIsEditing(false);
     onEditModeChange?.(false);
@@ -151,6 +153,10 @@ const Card: React.FC<CardProps> = ({
 
   const handleColorChange = (newColorId: string) => {
     onColorChange(id, newColorId);
+  };
+
+  const handleDeleteClick = () => {
+    onDelete(id);
   };
 
   useEffect(() => {
@@ -306,6 +312,7 @@ const Card: React.FC<CardProps> = ({
             cardHeight={cardSize.height}
             currentColorId={colorId}
             onSelectColor={handleColorChange}
+            onDelete={handleDeleteClick}
             onClose={exitEditMode} // Use unified exit function
             scale={scale}
             hasContent={content.trim().length > 0}
