@@ -152,7 +152,7 @@ const Canvas: React.FC = () => {
 
   const renderCanvas = (canvasWidth: number, canvasHeight: number) => (
     <div 
-      className="bg-white border border-gray-200 rounded-lg shadow-sm relative overflow-hidden canvas-area"
+      className="bg-gray-50 border border-gray-200 rounded-lg shadow-sm relative overflow-hidden canvas-area"
       style={{
         width: `${canvasWidth}px`,
         height: `${canvasHeight}px`,
@@ -163,11 +163,11 @@ const Canvas: React.FC = () => {
     >
       {/* Quadrant dividers */}
       <div className="absolute inset-0 flex pointer-events-none">
-        <div className="flex-1 border-r border-gray-300 quadrant-divider"></div>
+        <div className="flex-1 border-r border-gray-200 opacity-60 quadrant-divider"></div>
         <div className="flex-1 quadrant-divider"></div>
       </div>
       <div className="absolute inset-0 flex flex-col pointer-events-none">
-        <div className="flex-1 border-b border-gray-300 quadrant-divider"></div>
+        <div className="flex-1 border-b border-gray-200 opacity-60 quadrant-divider"></div>
         <div className="flex-1 quadrant-divider"></div>
       </div>
       
