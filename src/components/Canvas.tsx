@@ -244,11 +244,8 @@ const Canvas: React.FC = () => {
         <div className="flex-1 quadrant-divider"></div>
       </div>
 
-      {/* Y-Axis Label (top of left side, rotated) */}
-      <div 
-        className="absolute left-2 top-4 transform -rotate-90 pointer-events-auto"
-        style={{ transformOrigin: 'left top' }}
-      >
+      {/* Y-Axis Label (top of canvas, just to the right of the vertical line) */}
+      <div className="absolute top-4 left-1/2 ml-2 pointer-events-auto">
         <EditableLabel
           initialValue={canvasLabels.yAxisLabel}
           onSave={handleYAxisLabelSave}
@@ -259,8 +256,8 @@ const Canvas: React.FC = () => {
         />
       </div>
 
-      {/* X-Axis Label (horizontal, above the line) */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 pointer-events-auto">
+      {/* X-Axis Label (left edge of canvas, just above the horizontal line) */}
+      <div className="absolute top-1/2 left-4 -mt-6 pointer-events-auto">
         <EditableLabel
           initialValue={canvasLabels.xAxisLabel}
           onSave={handleXAxisLabelSave}
