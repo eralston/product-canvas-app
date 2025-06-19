@@ -421,11 +421,6 @@ const Canvas: React.FC = () => {
           </div>
         )}
       </div>
-      
-      {/* Debug info - positioned fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 p-2 bg-gray-100 text-xs text-gray-600 font-open-sans font-light z-30">
-        Mode: {viewportMode} | Scale: {Math.round(canvasScale * 100)}% | Canvas: {MIN_CANVAS_WIDTH}x{MIN_CANVAS_HEIGHT}px | Cards: {cards.length}
-      </div>
     </div>
   );
 };
