@@ -152,22 +152,48 @@ const Canvas: React.FC = () => {
 
   const renderCanvas = (canvasWidth: number, canvasHeight: number) => (
     <div 
-      className="bg-gray-50 border border-gray-200 rounded-lg shadow-sm relative overflow-hidden canvas-area"
+      className="relative overflow-hidden canvas-area rounded-lg shadow-sm border border-gray-200"
       style={{
         width: `${canvasWidth}px`,
         height: `${canvasHeight}px`,
         transform: `scale(${canvasScale})`,
         transformOrigin: 'center center',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
       }}
       onDoubleClick={handleCanvasDoubleClick}
     >
-      {/* Quadrant dividers */}
+      {/* Subtle grid pattern overlay */}
+      <div 
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.15) 1px, transparent 0)
+          `,
+          backgroundSize: '20px 20px'
+        }}
+      />
+      
+      {/* Enhanced quadrant dividers with subtle gradients */}
       <div className="absolute inset-0 flex pointer-events-none">
-        <div className="flex-1 border-r border-gray-200 opacity-60 quadrant-divider"></div>
+        <div className="flex-1 relative quadrant-divider">
+          <div 
+            className="absolute right-0 top-0 h-full w-px"
+            style={{
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(148, 163, 184, 0.4) 20%, rgba(148, 163, 184, 0.6) 50%, rgba(148, 163, 184, 0.4) 80%, transparent 100%)'
+            }}
+          />
+        </div>
         <div className="flex-1 quadrant-divider"></div>
       </div>
       <div className="absolute inset-0 flex flex-col pointer-events-none">
-        <div className="flex-1 border-b border-gray-200 opacity-60 quadrant-divider"></div>
+        <div className="flex-1 relative quadrant-divider">
+          <div 
+            className="absolute bottom-0 left-0 w-full h-px"
+            style={{
+              background: 'linear-gradient(to right, transparent 0%, rgba(148, 163, 184, 0.4) 20%, rgba(148, 163, 184, 0.6) 50%, rgba(148, 163, 184, 0.4) 80%, transparent 100%)'
+            }}
+          />
+        </div>
         <div className="flex-1 quadrant-divider"></div>
       </div>
       
@@ -203,8 +229,8 @@ const Canvas: React.FC = () => {
     <div className="w-full h-screen flex flex-col bg-gray-50">
       {/* Document Title */}
       <div className="p-4 bg-white border-b flex-shrink-0">
-        <h1 className="text-xl font-semibold text-gray-800">Interactive Canvas</h1>
-        <p className="text-sm text-gray-600 mt-1">
+        <h1 className="text-xl font-semibold text-gray-800 font-open-sans">Interactive Canvas</h1>
+        <p className="text-sm text-gray-600 mt-1 font-open-sans font-light">
           Drag cards around, double-click to edit and change colors, or double-click empty space to create new cards
         </p>
       </div>
@@ -239,7 +265,7 @@ const Canvas: React.FC = () => {
       </div>
       
       {/* Debug info - we can remove this later */}
-      <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0">
+      <div className="p-2 bg-gray-100 text-xs text-gray-600 flex-shrink-0 font-open-sans font-light">
         Mode: {viewportMode} | Scale: {Math.round(canvasScale * 100)}% | Canvas: {MIN_CANVAS_WIDTH}x{MIN_CANVAS_HEIGHT}px | Cards: {cards.length}
       </div>
     </div>
